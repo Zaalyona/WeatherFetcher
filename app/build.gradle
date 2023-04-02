@@ -17,6 +17,17 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
+        resources.excludes.add("META-INF/versions/*")
+        resources.excludes.add("META-INF/AL2.0")
+        resources.excludes.add("META-INF/LGPL2.1")
+        // for byte-buddy
+        resources.excludes.add("META-INF/licenses/ASM")
+        //resources.pickFirst("win32-x86-64/attach_hotspot_windows.dll")
+        //resources.pickFirst("win32-x86/attach_hotspot_windows.dll")
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -36,13 +47,13 @@ dependencies {
 
     def lifecycle_version = "2.6.1"
     def retrofit_version = "2.9.0"
-    def coroutines_version = "1.7.0-Beta"
+    def coroutines_version = "1.6.4"
 
-    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
