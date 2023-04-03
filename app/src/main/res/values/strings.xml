@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">WeatherFetcher</string>
+    <string-array name="city">Moscow</string-array>
 </resources>
