@@ -5,7 +5,11 @@ import com.example.weatherfetcher.feature.weather_screen.data.WeatherRepo
 
 class WeatherInteractor(private val weatherRepo: WeatherRepo) {
 
-    fun getWeather(): String {
+    suspend fun getWeather(): String {
         return weatherRepo.getTemperature()
+    }
+
+    suspend fun getWind(): String {
+        return weatherRepo.getWindDeg()
     }
 }

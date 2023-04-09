@@ -3,13 +3,13 @@ package com.example.weatherfetcher
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
 import android.widget.TextView
-import android.widget.Toast
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,8 +19,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val textViewHello = findViewById<TextView>(R.id.tvHello)
-        textViewHello.text = "Выберите город:"
+        val sdf = SimpleDateFormat("dd.MM.yyyy")
+        val currentDate = sdf.format(Date())
+
+        val textCurrentDate = findViewById<TextView>(R.id.idCurrentDate)
+
+        textCurrentDate.text = currentDate
 
         val spinner = findViewById<Spinner>(R.id.spnWeather)
         val arrayAdapter = ArrayAdapter<String>(
@@ -28,24 +32,6 @@ class MainActivity : AppCompatActivity() {
             android.R.layout.simple_spinner_dropdown_item,
             citiesArray)
         spinner.adapter = arrayAdapter
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                Toast.makeText(
-                    applicationContext,
-                    "Будет показан прогноз погоды в г. Москва :)",
-                    Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                TODO("Not yet implemented")
-            }
-
-        }
 
         val btnWeather = findViewById<Button>(R.id.btnWeather)
         btnWeather.setOnClickListener {
