@@ -2,46 +2,36 @@ package com.example.weatherfetcher
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.TextView
-import com.example.weatherfetcher.feature.weather_screen.WeatherInteractor
-import com.example.weatherfetcher.feature.weather_screen.data.WeatherApiClient
-import com.example.weatherfetcher.feature.weather_screen.data.WeatherRemoteSource
-import com.example.weatherfetcher.feature.weather_screen.data.WeatherRepoImpl
-import com.example.weatherfetcher.feature.weather_screen.ui.WeatherScreenPresenter
+import com.example.weatherfetcher.feature.weather_screen.ui.UiEvent
+import com.example.weatherfetcher.feature.weather_screen.ui.ViewState
+import com.example.weatherfetcher.feature.weather_screen.ui.WeatherScreenViewModel
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.Dispatcher
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var presenter: WeatherScreenPresenter
+    private val viewModel: WeatherScreenViewModel by viewModel()
+
+    private val textViewHello: TextView by lazy { findViewById(R.id.tvHello) }
+    private val fabWeather: FloatingActionButton by lazy { findViewById(R.id.fabWeatherFetch) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        presenter = WeatherScreenPresenter(
-            WeatherInteractor(
-                WeatherRepoImpl(
-                    WeatherRemoteSource(WeatherApiClient.getApi())
-                )
-            )
-        )
+        viewModel.viewState.observe(this, ::render)
 
-        var weather = ""
-        val textViewHello = findViewById<TextView>(R.id.tvHello)
-
-        GlobalScope.launch {
-            //Log.d("NET", presenter.interactor.getWeather())
-            withContext(Dispatchers.Main) {
-                textViewHello.text = presenter.getWeather()
-            }
-
+        fabWeather.setOnClickListener {
+            viewModel.processUiEvent(UiEvent.OnButtonClicked)
         }
+    }
 
-        textViewHello.text = weather
+    private fun render(viewState: ViewState) {
+        textViewHello.text = "${viewState.temperature} в Кельвинах"
     }
 }
