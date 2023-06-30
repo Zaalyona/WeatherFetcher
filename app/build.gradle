@@ -46,8 +46,10 @@ dependencies {
     def lifecycle_version = "2.6.1"
     def retrofit_version = "2.9.0"
     def coroutines_version = "1.6.4"
-    def gson_version = "2.10.1"
+    def gson_version = "2.9.0"
     def koin_android_version = "3.4.0"
+    def logging_interceptor_version = "4.10.0"
+    def android_ktx_fragment_version = "1.5.4"
 
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
@@ -71,4 +73,8 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     // Koin
     implementation "io.insert-koin:koin-android:$koin_android_version"
+    // Logging Interceptor
+    implementation "com.squareup.okhttp3:logging-interceptor:$logging_interceptor_version"
+    // Android KTX fragment
+    implementation "androidx.fragment:fragment-ktx:$android_ktx_fragment_version"
 }

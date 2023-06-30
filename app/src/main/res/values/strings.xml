@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">WeatherFetcher</string>
+    <string name="cityChoose">Выберите город</string>
+    <string name="showWeather">Показать погоду</string>
 </resources>

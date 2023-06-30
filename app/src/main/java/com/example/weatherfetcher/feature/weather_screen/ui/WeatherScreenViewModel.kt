@@ -1,7 +1,6 @@
 package com.example.weatherfetcher.feature.weather_screen.ui
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherfetcher.base.BaseViewModel
 import com.example.weatherfetcher.base.Event
@@ -10,24 +9,51 @@ import kotlinx.coroutines.launch
 
 class WeatherScreenViewModel(val interactor: WeatherInteractor): BaseViewModel<ViewState>() {
 
-    suspend fun getWeather(): String {
-        return interactor.getWeather()
-    }
+    override fun initialViewState(): ViewState = ViewState(
+        isLoading = false,
+        cityName = "",
+        temperature = "",
+        windDeg = ""
+    )
 
-    override fun initialViewState(): ViewState = ViewState(temperature = "")
-
-    override suspend fun reduce(event: Event, previousState: ViewState): ViewState? {
+    override fun reduce(event: Event, previousState: ViewState): ViewState? {
         when (event) {
-            is UiEvent.OnButtonClicked -> {
-                var temperature = ""
-                try {
-                    temperature = getWeather()
-                    //getWeather()
-                } catch (e: java.lang.Exception) {
-                    Log.e("ERROR", e.localizedMessage)
-                }
-                return previousState.copy(temperature = temperature)
+            is UiEvent.OnCityClicked -> {
+                return previousState.copy(cityName = event.cityName)
             }
+
+            is UiEvent.OnButtonClicked -> {
+
+                viewModelScope.launch {
+                    interactor.getWeather(previousState.cityName).fold(
+                        onError = {
+                            processDataEvent(DataEvent.OnWeatherFetchFailed(error = it))
+                            Log.d("Weather -> ", "Error")
+                        },
+                        onSuccess = {
+                            processDataEvent(DataEvent.OnWeatherFetchSucceed(it))
+                            Log.d("Weather -> ", "Success")
+                        }
+                    )
+                }
+
+                return previousState.copy(isLoading = true)
+            }
+
+            is DataEvent.OnWeatherFetchSucceed -> {
+                return previousState.copy(
+                    isLoading = false,
+                    temperature = event.weather.temperature,
+                    windDeg = event.weather.windDeg)
+                    /*temperature = event.weather.temperature.temperature,
+                    windDeg = event.weather.windDeg.windDeg)*/
+            }
+
+            is DataEvent.OnWeatherFetchFailed -> {
+                Log.d("ViewModelError", "-> OnWeatherFetchFailed")
+                return null
+            }
+
             else -> return null
         }
     }

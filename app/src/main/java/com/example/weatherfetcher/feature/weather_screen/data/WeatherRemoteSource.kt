@@ -5,8 +5,8 @@ import retrofit2.Response
 
 class WeatherRemoteSource(private val api: WeatherApi) {
 
-    // TODO add query
-    suspend fun getWeather(): WeatherRemoteModel {
-        return api.getWeather(query = "Moscow")
+    suspend fun getWeather(cityName: String): WeatherRemoteModel {
+        return api.getWeather(query = cityName)
+        //return api.getWeather(query = "Moscow")
     }
 }
